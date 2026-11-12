@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Coins, Loader as Loader2, QrCode, ScrollText, Settings2, ShieldAlert, ShieldCheck, Users } from 'lucide-react';
+import { Coins, Loader as Loader2, QrCode, ScrollText, Settings2, Shield as ShieldAlert, ShieldCheck, Users } from 'lucide-react';
 import { ApprovalsPanel } from '@/components/admin/ApprovalsPanel';
 import { PlayersPanel } from '@/components/admin/PlayersPanel';
 import { QrCodesPanel } from '@/components/admin/QrCodesPanel';

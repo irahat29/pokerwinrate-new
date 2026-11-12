@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Camera, Check, Copy, Gift, ImagePlus, Loader as Loader2, Save, Share2, Trash2, CircleUser as UserCircle, Users } from 'lucide-react';
+import { Camera, Check, Copy, Gift, ImagePlus, Loader as Loader2, Save, Share2, Trash as Trash2, CircleUser as UserCircle, Users } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { fetchMyReferralCount, fetchMyReferralEarnings, updateProfile, uploadAvatar } from '@/lib/api';
 import { useTableSettings } from '@/hooks/useTableSettings';

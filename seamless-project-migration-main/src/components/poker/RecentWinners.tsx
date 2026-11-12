@@ -1,4 +1,4 @@
-import { History } from 'lucide-react';
+import { Factory as History } from 'lucide-react';
 import { formatChips } from '@/lib/format';
 import type { HandResult } from '@/poker/types';
 

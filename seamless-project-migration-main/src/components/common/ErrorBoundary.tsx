@@ -1,5 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { TriangleAlert as AlertTriangle } from 'lucide-react';
+import { Triangle as AlertTriangle } from 'lucide-react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
