@@ -1,20 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Coins, Loader as Loader2, QrCode, ScrollText, Settings2, Shield as ShieldAlert, ShieldCheck, Users } from 'lucide-react';
+import { Coins, Loader as Loader2, QrCode, ScrollText, Settings2, Shield as ShieldAlert, ShieldCheck, TrendingUp, Users } from 'lucide-react';
 import { ApprovalsPanel } from '@/components/admin/ApprovalsPanel';
 import { PlayersPanel } from '@/components/admin/PlayersPanel';
 import { QrCodesPanel } from '@/components/admin/QrCodesPanel';
 import { SystemLogsPanel } from '@/components/admin/SystemLogsPanel';
 import { TableSettingsPanel } from '@/components/admin/TableSettingsPanel';
+import { WinLossPanel } from '@/components/admin/WinLossPanel';
 import { useLiveData } from '@/hooks/useLiveData';
 import { fetchAllTransactions, fetchIsAdmin } from '@/lib/api';
 import type { TransactionRow } from '@/lib/models';
 import { Button } from '@/components/ui/button';
 
-type AdminTab = 'approvals' | 'players' | 'settings' | 'qr' | 'logs';
+type AdminTab = 'approvals' | 'players' | 'settings' | 'qr' | 'logs' | 'winloss';
 
 const TABS: { id: AdminTab; label: string; icon: typeof Coins }[] = [
   { id: 'approvals', label: 'Approvals', icon: Coins },
   { id: 'players', label: 'Players', icon: Users },
+  { id: 'winloss', label: 'Win/Loss', icon: TrendingUp },
   { id: 'settings', label: 'Table settings', icon: Settings2 },
   { id: 'qr', label: 'Payment QR', icon: QrCode },
   { id: 'logs', label: 'System logs', icon: ScrollText },
@@ -110,6 +112,7 @@ function AdminDashboard() {
           />
         )}
         {tab === 'players' && <PlayersPanel />}
+        {tab === 'winloss' && <WinLossPanel />}
         {tab === 'settings' && <TableSettingsPanel />}
         {tab === 'qr' && <QrCodesPanel />}
         {tab === 'logs' && <SystemLogsPanel />}
