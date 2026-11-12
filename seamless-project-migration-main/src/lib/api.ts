@@ -10,7 +10,6 @@ import {
   type TableSettings,
   type TransactionRow,
   type TransactionType,
-  type WinLossStats,
 } from '@/lib/models';
 
 function must<T>(result: { data: T; error: { message: string } | null }): T {
@@ -267,8 +266,4 @@ export async function referralCodeExists(code: string): Promise<boolean> {
 
 export async function fetchMyReferralEarnings(): Promise<number> {
   return Number(must(await supabase.rpc('my_referral_earnings')) ?? 0);
-}
-
-export async function fetchWinLossStats(): Promise<WinLossStats[]> {
-  return must(await supabase.rpc('admin_win_loss_stats')) as unknown as WinLossStats[];
 }
