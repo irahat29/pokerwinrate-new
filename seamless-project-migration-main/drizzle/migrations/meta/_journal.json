@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794388009984,
+      "tag": "0000_master_poker_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794388092157,
+      "tag": "0001_poker_functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794390591463,
+      "tag": "0002_daily_paid_tournaments",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794443685623,
+      "tag": "0003_player_chat_and_champion_prize",
+      "breakpoints": true
+    }
+  ]
+}

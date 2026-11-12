@@ -1,0 +1,13 @@
+# Netlify: static copy of the app in dist/ (see scripts/netlify-drop.mjs).
+# Pages render in the browser; images and game requests go to the published Lovable app.
+[build]
+  command = "npm run build:netlify-drop"
+  publish = "dist"
+
+[build.environment]
+  NITRO_PRESET = "netlify"
+  NODE_VERSION = "22"
+  LOVABLE_APP_ORIGIN = "https://masterpokers.lovable.app"
+  VITE_SUPABASE_URL = "https://c--2f64c97a-ae4c-4b21-9613-4873935f5d22-prod.lovable.cloud"
+  VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6C_rgLjfoLsxrNLI57X8ww_wxmUTUaI"
+  VITE_SUPABASE_PROJECT_ID = "ceblcgjyhgkxauutcttt"

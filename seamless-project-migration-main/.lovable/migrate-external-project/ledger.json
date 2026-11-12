@@ -1,0 +1,9 @@
+[
+ {"capability":"code","source":"TanStack Start app","outcome":"migrate","status":"done","next_action":null},
+ {"capability":"schema","source":"Postgres (Supabase)","outcome":"migrate","status":"done","next_action":null},
+ {"capability":"records","source":"old database","outcome":"migrate","status":"pending","next_action":"user exports tables as CSV"},
+ {"capability":"auth identities","source":"Supabase auth users","outcome":"migrate","status":"pending","next_action":"user exports users (id, email)"},
+ {"capability":"storage","source":"avatars, payment-proofs buckets","outcome":"migrate","status":"buckets created; files pending","next_action":"files re-uploaded by users"},
+ {"capability":"payment QR image","source":"old project asset","outcome":"replace","status":"pending","next_action":"admin uploads QR in Admin > QR codes"},
+ {"capability":"netlify hosting","source":"netlify.toml","outcome":"drop; Lovable hosting","status":"accepted","next_action":null}
+]
