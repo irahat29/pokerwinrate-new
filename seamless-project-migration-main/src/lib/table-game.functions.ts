@@ -24,6 +24,7 @@ import {
   type GameRules,
 } from '@/poker/session';
 import type { Action, BotLevel, TableState } from '@/poker/types';
+import { potTotal } from '@/poker/engine';
 
 type Db = SupabaseClient<Database>;
 
@@ -139,6 +140,72 @@ async function saveGame(db: Db, row: GameRow, table: TableState): Promise<GameRo
   const latest = await loadGame(db, row.player_id, row.session_id);
   if (!latest) throw new Error('Table session not found');
   return latest;
+}
+
+interface HandResultRecord {
+  player_id: string;
+  session_id: string;
+  table_id: string | null;
+  hand_number: number;
+  result: 'win' | 'loss';
+  amount: number;
+  pot: number;
+  showdown: boolean;
+  hand_label: string;
+}
+
+/** Detect if the hand just completed and build a result record for the human player. */
+function extractHandResult(
+  before: TableState,
+  after: TableState,
+  row: GameRow
+): HandResultRecord | null {
+  const beforeComplete = before.hand?.street === 'complete';
+  const afterComplete = after.hand?.street === 'complete';
+  if (beforeComplete || !afterComplete || !after.hand) return null;
+
+  const me = myIndex(after);
+  if (me === -1) return null;
+
+  const mySeat = after.seats[me];
+  if (!mySeat) return null;
+
+  const winners = after.hand.winners;
+  const myWin = winners.some((w) => w.seat === me);
+  const myAmount = winners.filter((w) => w.seat === me).reduce((sum, w) => sum + w.amount, 0);
+  const myInvested = mySeat.invested;
+  const label = winners.find((w) => w.seat === me)?.label ?? winners[0]?.label ?? '';
+  const pot = potTotal(after);
+
+  return {
+    player_id: row.player_id,
+    session_id: row.session_id,
+    table_id: row.table_id,
+    hand_number: after.hand.number,
+    result: myWin ? 'win' : 'loss',
+    amount: myWin ? Math.max(0, myAmount - myInvested) : myInvested,
+    pot,
+    showdown: after.hand.showdown,
+    hand_label: label,
+  };
+}
+
+/** Insert a hand result record if the hand just completed. */
+async function recordHandResult(db: Db, before: TableState, after: TableState, row: GameRow): Promise<void> {
+  const record = extractHandResult(before, after, row);
+  if (!record) return;
+  const { error } = await db.from('hand_results').insert({
+    player_id: record.player_id,
+    session_id: record.session_id,
+    table_id: record.table_id,
+    hand_number: record.hand_number,
+    result: record.result,
+    amount: record.amount,
+    pot: record.pot,
+    showdown: record.showdown,
+    hand_label: record.hand_label,
+  });
+  if (error) console.error('Failed to record hand result:', error.message);
 }
 
 async function cashOut(db: Db, sessionId: string, amount: number): Promise<number> {
@@ -283,11 +350,13 @@ export const tickTableGame = createServerFn({ method: 'POST' })
     if (Date.now() < new Date(row.next_at).getTime() - CLOCK_TOLERANCE_MS) return { closed: false, view: toView(row) };
 
     const rules = await loadRules(db, row);
-    const step = autoStep(tableOf(row), data.remotes, rules);
+    const before = tableOf(row);
+    const step = autoStep(before, data.remotes, rules);
     if (step.kind === 'bust') {
       const balance = await closeGame(db, row);
       return { closed: true, view: null, balance };
     }
+    await recordHandResult(db, before, step.table, row);
     const saved = await saveGame(db, row, step.table);
     return { closed: false, view: toView(saved) };
   });
@@ -308,6 +377,7 @@ export const actAtTable = createServerFn({ method: 'POST' })
     if (me === -1 || table.hand?.toAct !== me) return { closed: false, view: toView(row) };
     const next = applyAction(table, me, data.action);
     if (next === table) return { closed: false, view: toView(row) };
+    await recordHandResult(db, table, next, row);
     const saved = await saveGame(db, row, next);
     return { closed: false, view: toView(saved) };
   });

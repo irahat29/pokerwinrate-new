@@ -95,6 +95,16 @@ export const DEFAULT_TABLE_SETTINGS: TableSettings = {
   playerWinRate: 50,
 };
 
+export interface WinLossStats {
+  player_id: string;
+  display_name: string;
+  wins: number;
+  losses: number;
+  total_hands: number;
+  win_rate: number;
+  net_chips: number;
+}
+
 export const AVATAR_EMOJIS = [
   '🙂', '😎', '🤓', '😤', '🥳', '🦊', '🐉', '🦁',
   '🐺', '🦅', '🐅', '🦈', '🐍', '🦝', '🐗', '🦏',
